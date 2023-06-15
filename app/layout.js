@@ -1,4 +1,5 @@
 import '@/styles/globals.css'
+import Nav from '@/components/ui/nav'
 import Footer from '@/components/ui/footer'
 import Provider from '@/components/provider'
 import { Alert } from '@/components/Alert'
@@ -17,7 +18,7 @@ export default function RootLayout({ children }) {
       <body>
       <Provider>
       <div className="flex flex-col min-h-screen">
-
+        <Nav/>
         <main className="flex-1 bg-white">
           <Alert/>
           {children}
