@@ -20,7 +20,6 @@ export default function LoginPage() {
     return accountService
       .login(email, password)
       .then((res) => {
-        console.log("res", res)
         if (!res.error) {
           router.push("/pages/admin");
         } else {

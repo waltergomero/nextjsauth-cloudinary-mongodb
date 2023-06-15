@@ -5,12 +5,16 @@ import { usePathname } from 'next/navigation';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { signIn, signOut } from 'next-auth/react';
-import { FaBeer } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import Image from 'next/image';
+import Link from 'next/link';
 
 const navigation = [
   { name: 'Dashboard', href: '/' },
-  { name: 'Playground', href: '/playground' }
+  { name: 'Gallery', href: '/pages/admin/gallery' },
+  { name: 'Categories', href: '/pages/admin/categories' },
+  { name: 'Status', href: '/pages/admin/status' },
+  { name: 'Users', href: '/pages/admin/users' },
 ];
 
 function classNames(...classes) {
@@ -73,7 +77,7 @@ export default function Navbar({ user }) {
                   <div>
                     <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
-                      <FaBeer/>
+                      <FaUser/>
                     </Menu.Button>
                   </div>
                   <Transition
@@ -103,15 +107,13 @@ export default function Navbar({ user }) {
                       ) : (
                         <Menu.Item>
                           {({ active }) => (
-                            <button
+                            <Link href="/pages/account/login"
                               className={classNames(
                                 active ? 'bg-gray-100' : '',
                                 'flex w-full px-4 py-2 text-sm text-gray-700'
                               )}
-                              onClick={() => signIn('github')}
-                            >
-                              Sign in
-                            </button>
+                            >Sign in
+                            </Link>
                           )}
                         </Menu.Item>
                       )}
@@ -156,7 +158,7 @@ export default function Navbar({ user }) {
                 <>
                   <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
-                      <FaBeer/>
+                      <FaUser/>
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-gray-800">
@@ -171,19 +173,18 @@ export default function Navbar({ user }) {
                     <button
                       onClick={() => signOut()}
                       className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
-                    >
-                      Sign out
+                    >Sign out
                     </button>
                   </div>
                 </>
               ) : (
                 <div className="mt-3 space-y-1">
-                  <button
-                    onClick={() => signIn('github')}
+                  <Link href="/pages/account/login"
+                    // onClick={() => signIn('github')}
                     className="flex w-full px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
                   >
                     Sign in
-                  </button>
+                  </Link>
                 </div>
               )}
             </div>
