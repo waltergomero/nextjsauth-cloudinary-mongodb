@@ -1,8 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
+import { CldImage } from 'next-cloudinary';
 
-const GalleryPage = (props) => {
-  const users = props.data;
-  const role = localStorage.getItem("role");
+const DashboardPage = (props) => {
+  //const users = props.data;
+  //const role = localStorage.getItem("role");
   return (
     <>
       <div className="flex h-full flex-col rounded p-4 m-2 border border-gray-200">
@@ -14,10 +16,17 @@ const GalleryPage = (props) => {
             Upload Images
           </Link>
         </div>
-
+        <Image
+            width="340"
+            height="300"
+            src="https://res.cloudinary.com/wgomero-dev/image/upload/v1666919434/cld-sample-2.jpg"
+            sizes="100vw"
+            priority={false}
+            alt="Description of my image"
+        />
       </div>
     </>
   );
 }
 
-export default GalleryPage;
+export default DashboardPage;
