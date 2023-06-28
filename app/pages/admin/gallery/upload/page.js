@@ -1,20 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import Compressor from "compressorjs";
+import { alertService } from '@/services/alert.service';
 
 const UploadPage = () => {
-    const [file, setFile] = useState(null);
-    const [filename, setFilename] = useState('');
-    // const [imageExtension, setImageExtension] = useState(null);
+
     const [compressedFile, setCompressedFile] = useState(null);
-    // const [selCategoryValue, setSelCategoryValue] = useState("");
-    // const [selCategoryName, setSelCategoryName] = useState("");
     const [ddCategorylist, setDDCategoryList] = useState(null);
     const [imageInformation, setImageInformation] = useState(
-        { title: "", category_name: "", category_id: "", description: "", extension: ""
-    });
+        { title: "", category_name: "", category_id: "", description: "", image_name:"", url:"", user_id:"", email:"" });
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -29,10 +24,7 @@ const UploadPage = () => {
     }, []);
   
     const handleCompressedUpload = (e) => {
-        const image = e.target.files[0];
-        const ext = image.name.substr(image.name.lastIndexOf(".") + 1);
-        setImageInformation({ ...imageInformation, extension: ext })
-    
+        const image = e.target.files[0];    
         new Compressor(image, {
           quality: 0.9, // 0.6 can also be used, but its not recommended to go below.
           maxWidth: 1290,
@@ -58,37 +50,30 @@ const UploadPage = () => {
         event.preventDefault();
 
         const userid = localStorage.getItem("user_id");
-        const email = localStorage.getItem("user_email");
+        const useremail = localStorage.getItem("user_email");
         if (compressedFile != null) {
           const formdata = new FormData();
-        //   formdata.append("user_id", userid);
-        //   formdata.append("email", email);
-        //   formdata.append("category_id", imageInformation.category_id);
-        //   formdata.append("category_name", imageInformation.category_name);
-        //   formdata.append("title", imageInformation.title);
-        //   formdata.append("description", imageInformation.description);
-        //   formdata.append("extension", imageInformation.extension);
           formdata.append('file', compressedFile);
           formdata.append("upload_preset", "gallery")
-        
-          for (const value of formdata.values()) {
-            console.log(value);
-          }
-
           const data = await fetch('https://api.cloudinary.com/v1_1/wgomero-dev/image/upload', {
                         method: 'POST',
                         body: formdata
                 }).then(r => r.json());
-   
-        // try {
-        //   const response = await fetch('https://api.cloudinary.com/v1_1/wgomero-dev/image/upload',{
-        //     method: "POST",
-        //     body: formdata
-        // });
-        //   console.log(response);
-        // } catch (error) {
-        //   console.error(error);
-        //     }
+                console.log("returned data url: ", data)
+
+          setImageInformation({...imageInformation, user_id: userid, email: useremail, url: data.url, image_name: data.public_id});
+          console.log("passing data: ", imageInformation);
+           await fetch("/api/admin/gallery/new", { method: "POST",  body: JSON.stringify({ imageInformation }), })
+          // .then((response) => response.json())
+          // .then(data => {
+          //   if(data.error){
+          //     alertService.error(data.error);
+          //     }
+          //   else{  
+          //     router.push("/pages/admin/categories")
+          //   }
+          //   })
+          // .catch(error => alertService.error(error.message))
         }
       };
 
@@ -131,7 +116,7 @@ const UploadPage = () => {
         <>
             <div className="flex justify-center mt-2 p-2 rounded-lg border border-gray-200">
                 <img
-                    className="h-80 rounded-lg "
+                    className="h-96 rounded-lg "
                     src={URL.createObjectURL(compressedFile)}
                     alt="uploaded Images"
                   />
@@ -139,7 +124,7 @@ const UploadPage = () => {
             <div className='flex justify-center'>
                 <button
                     onClick={removeSelectedImage}
-                    className="w-64 justify-center px-1 py-1 mb-2 text-white text-xs rounded-md bg-red-500"
+                    className="w-64 justify-center py-1 mt-1 mb-1 text-white text-xs rounded-md bg-red-500"
                   >
                     Remove this image
                 </button>

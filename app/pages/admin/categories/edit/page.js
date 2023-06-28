@@ -37,12 +37,7 @@ const UpdateCategory = () => {
 
     if (!categoryId) return alert("Missing Category Id!");
 
-    await fetch(`/api/admin/categories/${categoryId}`, {
-      method: "PATCH",
-      body: JSON.stringify({
-          category
-      }),
-    })
+    await fetch(`/api/admin/categories/${categoryId}`, { method: "PATCH",  body: JSON.stringify({ category }), })
     .then((response) => response.json())
     .then(data => {
       if(data.error){
